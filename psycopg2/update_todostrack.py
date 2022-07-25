@@ -1,4 +1,3 @@
-from unittest import result
 import psycopg2
 
 # define database to connect to
