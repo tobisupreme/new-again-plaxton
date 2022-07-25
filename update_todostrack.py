@@ -12,8 +12,8 @@ cur = conn.cursor()
 # add rows to todos_track table
 cur.execute('INSERT INTO todos_track (id, completed) VALUES (%s, %s);', (1, False))
 
-cur.execute('INSERT INTO todos_track (id, completed) VALUES (%(id)s, (%(completed)s);', {
-  'id': 1,
+cur.execute('INSERT INTO todos_track (id, completed) VALUES (%(id)s, %(completed)s);', {
+  'id': 2,
   'completed': True
 })
 
