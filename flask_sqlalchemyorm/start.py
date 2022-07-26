@@ -6,6 +6,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tobisupreme:tobi@localhost
 db = SQLAlchemy(app)
 
 
+class Person(db.model):
+    __tablename__ = 'persons'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+
+
 @app.route('/')
 def index():
     return 'hello world! I am here'
