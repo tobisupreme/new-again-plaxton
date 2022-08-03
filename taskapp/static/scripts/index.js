@@ -17,19 +17,10 @@ function sendReq(e) {
       console.log(data);
       document.getElementById("error").classList.add("hidden");
       const liItem = document.createElement("li");
-      liItem.innerText = data.description;
+      liItem.innerText = data.task_desc;
       document.getElementById("tasks").appendChild(liItem);
     }).catch((err) => {
         document.getElementById("error").classList.remove("hidden");
         console.log(err);
     })
 }
-/* fetch("https://dog.ceo/api/breeds/image/random")
-    .then(res => res.json()) // parse response as JSON
-    .then(data => {
-      console.log(data)
-    })
-    .catch(err => {
-        console.log(`error ${err}`)
-    });
- */

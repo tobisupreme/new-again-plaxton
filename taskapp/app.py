@@ -1,5 +1,6 @@
+import sys
 from crypt import methods
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -32,18 +33,32 @@ class Tasks(db.Model):
 
 @app.route('/tasks/create', methods=['POST'])
 def create_task():
-    # store request from client
-    task_desc = request.get_json()['task_desc']
-    # Attach request to database object
-    task = Tasks(task=task_desc)
-    # Add object to database in new session
-    db.session.add(task)
-    # commit change to session
-    db.session.commit()
-    # send data back to client
-    return jsonify({
-        'description': task.task
-    })
+    error = False
+    body = {}
+    try:
+        # store request from client
+        task_desc = request.get_json()['task_desc']
+        # Attach request to database object
+        task = Tasks(task=task_desc)
+        # Add object to database in new session
+        db.session.add(task)
+        # commit change to session
+        db.session.commit()
+        body['task_desc'] = task.task
+    except:
+        # If error, roll back changes and print error info
+        error = True
+        db.session.rollback()
+        print(sys.exec_info())
+    finally:
+        # Close out the connection
+        db.session.close()
+    if error:
+        # Show abort message
+        abort(400)
+    else:
+        # send data back to client
+        return jsonify(body)
 
 
 @app.route('/')
