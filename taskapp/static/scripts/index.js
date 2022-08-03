@@ -29,10 +29,9 @@ function sendReq(e) {
 const checkboxes = document.querySelectorAll(".check-completed");
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener("change", (e) => {
-    console.log(e.target.checked);
     let newCompleted = e.target.checked;
-
-    const url = "/tasks/set_completed";
+    const todo_id = e.target.dataset.id;
+    const url = `/tasks/${todo_id}/set_completed`;
     const request = {
       method: "POST",
       body: JSON.stringify({
@@ -44,10 +43,7 @@ checkboxes.forEach((checkbox) => {
     };
 
     fetch(url, request)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
+      .then(() => document.getElementById("error").classList.add("hidden"))
+      .catch(() => document.getElementById("error").classList.remove("hidden"));
   });
 });

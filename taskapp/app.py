@@ -23,13 +23,19 @@ class Tasks(db.Model):
         return f'[Task ID = {self.id} | Task = {self.task}]'
 
 
-# @app.route('/tasks/create', methods=['POST'])
-# def create_task():
-#     task_desc = request.form.get('task', '')
-#     task = Tasks(task=task_desc)
-#     db.session.add(task)
-#     db.session.commit()
-#     return redirect(url_for('index'))
+@app.route('/tasks/<task_id>/set_completed', methods=['POST'])
+def update_completed(task_id):
+    try:
+        completed = request.get_json()['completed']
+        task = Tasks.query.get(task_id)
+        task.completed = completed
+        db.session.commit()
+    except:
+        db.session.rollback()
+        print(sys.exec_info())
+    finally:
+        db.session.close()
+    return redirect(url_for('index'))
 
 
 @app.route('/tasks/create', methods=['POST'])
@@ -64,7 +70,7 @@ def create_task():
 
 @app.route('/')
 def index():
-    return render_template('index.html', data=Tasks.query.all())
+    return render_template('index.html', data=Tasks.query.order_by('id').all())
 
 
 if __name__ == '__main__':

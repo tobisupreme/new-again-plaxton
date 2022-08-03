@@ -31,7 +31,7 @@
     <ul id="tasks">
         {% for task in data %}
         <li>
-            <input class="check-completed" type="checkbox" {% if task.completed %} checked {% endif %}/>{{ task.task }}
+            <input class="check-completed" data-id="{{ task.id }}" type="checkbox" {% if task.completed %} checked {% endif %}/>{{ task.task }}
         </li>
         {% endfor %}
     </ul>
