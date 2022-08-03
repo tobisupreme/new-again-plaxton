@@ -26,8 +26,12 @@ class Tasks(db.Model):
 @app.route('/tasks/<task_id>/set_completed', methods=['POST'])
 def update_completed(task_id):
     try:
+        # store request from client
         completed = request.get_json()['completed']
+        print('completed', completed)
+        # get matching task from database
         task = Tasks.query.get(task_id)
+        # set completed status to value from client
         task.completed = completed
         db.session.commit()
     except:
