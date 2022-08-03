@@ -17,6 +17,8 @@
 h2 {
     text-align: center;
     margin-bottom: 32px;
+    font-size: 32px;
+    font-weight: 700;
 }
 
 form {
@@ -28,10 +30,10 @@ ul {
     margin-left: 32px;
 }
 
-ul {
-    list-style-type: disc;
-}
-
 li {
     margin-bottom: 8px;
+}
+
+li input {
+    margin-right: 8px;
 }
