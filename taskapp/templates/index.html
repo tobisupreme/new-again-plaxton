@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks App</title>
 </head>
+
 <body>
+    <!-- Title -->
     <h2>Todo App of the Century</h2>
+
+    <!-- Create todos -->
+    <form action="/tasks/create" method="post">
+
+        <label for="task">
+            <input type="text" name="task" id="task">
+        </label>
+
+        <input type="Submit" value="Create" id="submit">
+
+    </form>
+
+    <!-- Displat tasks -->
     <ul>
         {% for task in data %}
         <li>{{ task.task }}</li>
         {% endfor %}
     </ul>
+
 </body>
+
 </html>
