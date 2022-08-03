@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/style.css">
+    <script src="/static/scripts/index.js" defer></script>
+    <link rel="icon" href="/static/ico/favicon.ico">
     <title>Tasks App</title>
 </head>
 
@@ -13,7 +16,7 @@
     <h2>Todo App of the Century</h2>
 
     <!-- Create todos -->
-    <form action="/tasks/create" method="post">
+    <form id="form">
 
         <label for="task">
             <input type="text" name="task" id="task">
@@ -24,11 +27,13 @@
     </form>
 
     <!-- Displat tasks -->
-    <ul>
+    <ul id="tasks">
         {% for task in data %}
         <li>{{ task.task }}</li>
         {% endfor %}
     </ul>
+
+    <div class="hidden" id="error">Something went wrong!</div>
 
 </body>
 

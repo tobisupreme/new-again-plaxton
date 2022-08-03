@@ -1,9 +1,9 @@
 from crypt import methods
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tobisupreme:tobi@localhost:5432/dummytasksapp'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -21,13 +21,29 @@ class Tasks(db.Model):
         return f'[Task ID = {self.id} | Task = {self.task}]'
 
 
+# @app.route('/tasks/create', methods=['POST'])
+# def create_task():
+#     task_desc = request.form.get('task', '')
+#     task = Tasks(task=task_desc)
+#     db.session.add(task)
+#     db.session.commit()
+#     return redirect(url_for('index'))
+
+
 @app.route('/tasks/create', methods=['POST'])
 def create_task():
-    task_desc = request.form.get('task', '')
+    # store request from client
+    task_desc = request.get_json()['task_desc']
+    # Attach request to database object
     task = Tasks(task=task_desc)
+    # Add object to database in new session
     db.session.add(task)
+    # commit change to session
     db.session.commit()
-    return redirect(url_for('index'))
+    # send data back to client
+    return jsonify({
+        'description': task.task
+    })
 
 
 @app.route('/')
