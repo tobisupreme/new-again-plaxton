@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from crypt import methods
+from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -18,6 +19,15 @@ class Tasks(db.Model):
 
     def __repr__(self):
         return f'[Task ID = {self.id} | Task = {self.task}]'
+
+
+@app.route('/tasks/create', methods=['POST'])
+def create_task():
+    task_desc = request.form.get('task', '')
+    task = Tasks(task=task_desc)
+    db.session.add(task)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 
 @app.route('/')
