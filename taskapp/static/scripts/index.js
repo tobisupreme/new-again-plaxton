@@ -7,7 +7,10 @@ function sendReq(e) {
   const url = "/tasks/create";
   const request = {
     method: "POST",
-    body: JSON.stringify({ task_desc: document.getElementById("task").value }),
+    body: JSON.stringify({
+      task_desc: document.getElementById("task").value,
+      completed: false,
+    }),
     headers: { "Content-Type": "application/json" },
   };
 

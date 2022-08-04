@@ -48,9 +48,10 @@ def create_task():
     body = {}
     try:
         # store request from client
-        task_desc = request.get_json()['task_desc']
+        task_desc = request.get_json()
         # Attach request to database object
-        task = Tasks(task=task_desc)
+        task = Tasks(task=task_desc['task_desc'],
+                     completed=task_desc['completed'])
         # Add object to database in new session
         db.session.add(task)
         # commit change to session
