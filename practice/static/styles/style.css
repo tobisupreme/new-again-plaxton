@@ -1,0 +1,139 @@
+:root {
+    --primary-bg: #ffffff;
+    --primary-fg: #d7e04d;
+    --primary-alert: #ff0000;
+    --quick-border: .1rem solid var(--primary-fg);
+    --snappy-transition: .2s ease-in-out;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.6rem;
+    background-color: var(--primary-bg);
+}
+
+h2 {
+    font-size: 2.4rem;
+    font-weight: 600;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    margin: 1.6rem;
+}
+
+.todos-wrap {
+    align-items: center;
+    display: grid;
+    grid-template-rows: repeat(4, minmax(3.2rem, auto));
+    min-width: 32rem;
+    max-width: 52rem;
+}
+
+.todos-wrap h2 {
+    margin-bottom: 3.2rem;
+}
+
+#form-wrap,
+.lists-wrap {
+    position: relative;
+    border: var(--quick-border);
+    border-radius: .6rem;
+}
+
+.form-title {
+    position: absolute;
+    transform: translate(12.5%, -50%);
+    z-index: 20;
+    padding: 0 .8rem;
+    background-color: var(--primary-bg);
+}
+
+#form {
+    padding: 2.4rem;
+    padding-bottom: .8rem;
+    display: flex;
+    gap: .8rem;
+    flex-direction: column;
+}
+
+#form input {
+    width: 100%;
+}
+
+#error {
+    color: var(--primary-alert);
+    text-align: center;
+}
+
+.lists-wrap {
+    padding: .8rem 1.6rem;
+}
+
+.lists-wrap li {
+    margin-bottom: .8rem;
+    display: grid;
+    grid-template-columns: 7% 80% 13%;
+    grid-template-columns: 1fr 30fr 1fr;
+    gap: .8rem;
+    align-items: center;
+    font-size: 1.7rem;
+}
+
+.lists-wrap li .delete {
+    cursor: pointer;
+    transition: var(--snappy-transition);
+}
+
+.lists-wrap li .delete:hover {
+    color: var(--primary-alert);
+}
+
+.lists-wrap li:last-of-type {
+    margin-bottom: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+#todo,
+#submit {
+    border: none;
+    outline: none;
+    appearance: none;
+    border-radius: .4rem;
+}
+
+#todo {
+    padding: .8rem 1.2rem;
+    outline: var(--quick-border);
+    line-height: 1.4;
+    font-size: 1.5rem;
+}
+
+form #submit {
+    appearance: none;
+    padding: .8rem 1.6rem;
+    width: min-content;
+    align-self: flex-end;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: var(--snappy-transition);
+}
+
+form #submit:hover {
+    color: var(--primary-bg);
+    background-color: var(--primary-fg);
+}

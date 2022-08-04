@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/ericmeyerreset.css">
+    <link rel="stylesheet" href="/static/styles/style.css">
+    <script defer src="/static/scripts/index.js"></script>
+    <title>Todo App</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="todos-wrap">
+            <h2>Todiddly</h2>
+
+            <fieldset id="form-wrap">
+
+                <h3 class="form-title">Add Todo</h3>
+                <form id="form">
+
+                    <input type="text" name="todo" id="todo" placeholder="To-do here...">
+                    <input type="submit" value="Add" id="submit">
+
+                </form>
+
+            </fieldset>
+
+            <div class="error-wrap">
+                <p class="hidden" id="error">Oops! An error occured.</p>
+            </div>
+
+            <ul class="lists-wrap">
+                <li>
+                    <input type="checkbox" class="checkbox">
+                    This is a dummy list item
+                    <div class="delete">&cross;</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
