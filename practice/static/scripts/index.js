@@ -1,10 +1,12 @@
 const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
+const errorMessage = document.getElementById("error");
 
 form.addEventListener("submit", sendRequest);
 
 function sendRequest(e) {
   e.preventDefault();
+  errorMessage.className = "hidden";
 
   const todoDescription = todo.value;
   if (todoDescription.length < 1) {
@@ -21,5 +23,35 @@ function sendRequest(e) {
 
   fetch(url, request)
     .then((data) => data.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      // get ul
+      const ul = document.querySelector(".lists-wrap");
+
+      // create <li></li>
+      const li = document.createElement("li");
+
+      // create todo description
+      const newTodo = document.createTextNode(data.description);
+
+      // create <input type="checkbox" class="checkbox"/>
+      const checkbox = document.createElement("input");
+      checkbox.setAttribute("type", "checkbox");
+      checkbox.className = "checkbox";
+
+      // create <div class="delete">&cross;</div>
+      const div = document.createElement("div");
+      div.innerHTML = "&cross;";
+
+      // put it all in the <li></li>
+      li.appendChild(checkbox);
+      li.appendChild(newTodo);
+      li.appendChild(div);
+
+      // Put it all in the ul
+      ul.appendChild(li);
+    })
+    .catch((err) => {
+      console.log(err);
+      errorMessage.className = "";
+    });
 }
