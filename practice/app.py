@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from os import abort
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -25,6 +26,38 @@ class Todos(db.Model):
         return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
 
 
+# define create todo endpoint
+@app.route('/todo/add', methods=['POST'])
+def add_todo():
+    error = False
+    body = {}
+    try:
+        # get data from client request
+        add_todo = request.get_json()['description']
+        # attach client request to database instance
+        todo = Todos(description=add_todo)
+        # add request to data base
+        db.session.add(todo)
+        # read from database and attach to a response object
+        body['description'] = todo.description
+        # for debugging, print to the console
+        print(body)
+        # commit transaction to database
+        db.session.commit()
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+        if error:
+            abort()
+        else:
+            return jsonify(body)
+
+
+# define homepage route
 @app.route('/')
 def index():
     return render_template('index.html', todos=Todos.query.order_by('id').all())
