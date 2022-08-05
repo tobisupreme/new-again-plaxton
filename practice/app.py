@@ -22,12 +22,12 @@ class Todos(db.Model):
     completed = db.Column(db.Boolean(), nullable=False, default=False)
 
     def __repr__(self):
-        return f'[Todo ID: {self.id} | Todo description: {self.desc} | Todo_complete_status: {self.completed}'
+        return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', todos=Todos.query.order_by('id').all())
 
 
 if __name__ == '__main__':

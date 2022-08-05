@@ -33,11 +33,14 @@
             </div>
 
             <ul class="lists-wrap">
+                {% for todo in todos %}
+                
                 <li>
-                    <input type="checkbox" class="checkbox">
-                    This is a dummy list item
+                    <input type="checkbox" class="checkbox" {% if todo.completed %} checked {% endif %}>
+                    {{ todo.description }}
                     <div class="delete">&cross;</div>
                 </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
