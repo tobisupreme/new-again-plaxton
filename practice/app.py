@@ -21,7 +21,7 @@ class Todos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
     completed = db.Column(db.Boolean(), nullable=False, default=False)
-    todolist_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=False)
+    todolist_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=False, default=1)
 
     def __repr__(self):
         return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
@@ -86,8 +86,7 @@ def set_todo_complete(todo_id):
         db.session.close()
         if error:
             abort(500)
-        else:
-            return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 
 # define create todo endpoint
