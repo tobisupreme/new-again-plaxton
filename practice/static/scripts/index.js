@@ -49,6 +49,8 @@ function sendRequest(e) {
             // create <div class="delete">&cross;</div>
             const div = document.createElement("div");
             div.innerHTML = "&cross;";
+            div.className = "delete";
+            div.addEventListener("click", deleteTodo);
 
             // put it all in the <li></li>
             li.appendChild(checkbox);
@@ -97,7 +99,7 @@ function deleteTodo(e) {
     // Define fetch parameters
     const url = `/todo/${todo_id}/delete`;
     const request = {
-        method: "POST",
+        method: "DELETE",
         body: JSON.stringify({
             todo_id: todo_id,
         }),
@@ -107,7 +109,7 @@ function deleteTodo(e) {
     // Send request to server endpoint using fetch
     fetch(url, request)
         .then((response) => {
-            if (response.status == 200) {
+            if (response.status == 405) {
                 li.remove();
                 // window.location.reload();
             } else throw Error;

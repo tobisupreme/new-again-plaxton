@@ -27,7 +27,7 @@ class Todos(db.Model):
 
 
 # define delete todo endpoint
-@app.route('/todo/<todo_id>/delete', methods=['POST'])
+@app.route('/todo/<todo_id>/delete', methods=['DELETE'])
 def delete_todo(todo_id):
     error = False
     try:
