@@ -26,7 +26,33 @@ class Todos(db.Model):
         return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
 
 
-# define create update todo completed status endpoint
+# define delete todo endpoint
+@app.route('/todo/<todo_id>/delete', methods=['POST'])
+def delete_todo(todo_id):
+    error = False
+    try:
+        # get data from client request
+        todo_id = todo_id
+        # attach client request to database instance
+        todo = Todos.query.get(todo_id)
+        # delete todo from data base
+        db.session.delete(todo)
+        # commit transaction to database
+        db.session.commit()
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+        if error:
+            abort(500)
+        else:
+            return redirect(url_for('index'))
+
+
+# define update todo completed status endpoint
 @app.route('/todo/<todo_id>/update', methods=['POST'])
 def set_todo_complete(todo_id):
     error = False
@@ -51,7 +77,7 @@ def set_todo_complete(todo_id):
         # close database session
         db.session.close()
         if error:
-            abort()
+            abort(500)
         else:
             return redirect(url_for('index'))
 

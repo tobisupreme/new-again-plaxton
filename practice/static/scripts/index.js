@@ -3,6 +3,7 @@ const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
 const errorMessage = document.getElementById("error");
 const checkboxes = document.querySelectorAll(".checkbox");
+const deleteButtons = document.querySelectorAll(".delete");
 
 // addEventListener on form submission
 form.addEventListener("submit", sendRequest);
@@ -84,4 +85,34 @@ function updateTodoStatus(e) {
     // Send request to server endpoint using fetch
     fetch(url, request)
         .then((response) => console.log(response.status));
+}
+
+// Add event listener to delete buttons
+deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
+
+function deleteTodo(e) {
+    const todo_id = e.target.parentElement.firstElementChild.dataset.id;
+
+    // Define fetch parameters
+    const url = `/todo/${todo_id}/delete`;
+    const request = {
+        method: "POST",
+        body: JSON.stringify({
+            todo_id: todo_id,
+        }),
+        headers: { "Content-Type": "application/json" },
+    };
+
+    // Send request to server endpoint using fetch
+    fetch(url, request)
+        .then((response) => {
+            if (response.status == 200) {
+                window.location.reload();
+            } else throw Error;
+        })
+        .catch((err) => {
+            // if error, show error message
+            console.log(err);
+            errorMessage.className = "";
+        });
 }
