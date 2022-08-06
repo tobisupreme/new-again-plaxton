@@ -2,6 +2,7 @@
 const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
 const errorMessage = document.getElementById("error");
+const checkboxes = document.querySelectorAll(".checkbox");
 
 // addEventListener on form submission
 form.addEventListener("submit", sendRequest);
@@ -61,4 +62,26 @@ function sendRequest(e) {
             console.log(err);
             errorMessage.className = "";
         });
+}
+
+// Add event lisetener to checkboxes
+checkboxes.forEach((checkbox) => checkbox.addEventListener("change", updateTodoStatus));
+
+function updateTodoStatus(e) {
+    const todo_id = e.target.dataset.id;
+    const completed_status = e.target.checked;
+
+    // Define fetch parameters
+    const url = `/todo/${todo_id}/update`;
+    const request = {
+        method: "POST",
+        body: JSON.stringify({
+            completed: completed_status,
+        }),
+        headers: { "Content-Type": "application/json" },
+    };
+
+    // Send request to server endpoint using fetch
+    fetch(url, request)
+        .then((response) => console.log(response.status));
 }

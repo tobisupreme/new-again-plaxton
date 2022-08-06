@@ -36,7 +36,7 @@
                 {% for todo in todos %}
                 
                 <li>
-                    <input type="checkbox" class="checkbox" {% if todo.completed %} checked {% endif %}>
+                    <input data-id={{todo.id}} type="checkbox" class="checkbox" {% if todo.completed %} checked {% endif %}>
                     {{ todo.description }}
                     <div class="delete">&cross;</div>
                 </li>
