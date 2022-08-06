@@ -1,57 +1,64 @@
+// Get DOM elements
 const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
 const errorMessage = document.getElementById("error");
 
+// addEventListener on form submission
 form.addEventListener("submit", sendRequest);
 
 function sendRequest(e) {
-  e.preventDefault();
-  errorMessage.className = "hidden";
+    e.preventDefault();
+    errorMessage.className = "hidden";
 
-  const todoDescription = todo.value;
-  if (todoDescription.length < 1) {
-    throw Error("Todo should not be empty!");
-  }
-  const url = `/todo/add`;
-  const request = {
-    method: "POST",
-    body: JSON.stringify({
-      description: todoDescription,
-    }),
-    headers: { "Content-Type": "application/JSON" },
-  };
+    // show error if todo is empty
+    const todoDescription = todo.value;
+    if (todoDescription.length < 1) {
+        throw Error("Todo should not be empty!");
+    }
 
-  fetch(url, request)
-    .then((data) => data.json())
-    .then((data) => {
-      // get ul
-      const ul = document.querySelector(".lists-wrap");
+    // Define fetch parameters
+    const url = `/todo/add`;
+    const request = {
+        method: "POST",
+        body: JSON.stringify({
+            description: todoDescription,
+        }),
+        headers: { "Content-Type": "application/JSON" },
+    };
 
-      // create <li></li>
-      const li = document.createElement("li");
+    // Send request to server endpoint using fetch
+    fetch(url, request)
+        .then((data) => data.json())
+        .then((data) => {
+            // get ul
+            const ul = document.querySelector(".lists-wrap");
 
-      // create todo description
-      const newTodo = document.createTextNode(data.description);
+            // create <li></li>
+            const li = document.createElement("li");
 
-      // create <input type="checkbox" class="checkbox"/>
-      const checkbox = document.createElement("input");
-      checkbox.setAttribute("type", "checkbox");
-      checkbox.className = "checkbox";
+            // create todo description
+            const newTodo = document.createTextNode(data.description);
 
-      // create <div class="delete">&cross;</div>
-      const div = document.createElement("div");
-      div.innerHTML = "&cross;";
+            // create <input type="checkbox" class="checkbox"/>
+            const checkbox = document.createElement("input");
+            checkbox.setAttribute("type", "checkbox");
+            checkbox.className = "checkbox";
 
-      // put it all in the <li></li>
-      li.appendChild(checkbox);
-      li.appendChild(newTodo);
-      li.appendChild(div);
+            // create <div class="delete">&cross;</div>
+            const div = document.createElement("div");
+            div.innerHTML = "&cross;";
 
-      // Put it all in the ul
-      ul.appendChild(li);
-    })
-    .catch((err) => {
-      console.log(err);
-      errorMessage.className = "";
-    });
+            // put it all in the <li></li>
+            li.appendChild(checkbox);
+            li.appendChild(newTodo);
+            li.appendChild(div);
+
+            // Put it all in the ul
+            ul.appendChild(li);
+        })
+        .catch((err) => {
+            // if error, show error message
+            console.log(err);
+            errorMessage.className = "";
+        });
 }
