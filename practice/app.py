@@ -26,6 +26,36 @@ class Todos(db.Model):
         return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
 
 
+# define create update todo completed status endpoint
+@app.route('/todo/<todo_id>/update', methods=['POST'])
+def set_todo_complete(todo_id):
+    error = False
+    try:
+        # get data from client request
+        todo_id = todo_id
+        todo_status = request.get_json()['completed']
+        # attach client request to database instance
+        todo = Todos.query.get(todo_id)
+        # add request to data base
+        todo.completed = todo_status
+        db.session.add(todo)
+        # for debugging, print to the console
+        print(todo)
+        # commit transaction to database
+        db.session.commit()
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+        if error:
+            abort()
+        else:
+            return redirect(url_for('index'))
+
+
 # define create todo endpoint
 @app.route('/todo/add', methods=['POST'])
 def add_todo():
