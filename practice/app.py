@@ -1,3 +1,4 @@
+from email.policy import default
 from os import abort
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -20,10 +21,22 @@ class Todos(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
-    completed = db.Column(db.Boolean(), nullable=False, default=False)
+    completed = db.Column(db.Boolean(), default=False)
+    list_id = db.Column(db.Integer, db.ForeignKey('lists.id'), nullable=False, default=1)
 
     def __repr__(self):
         return f'[Todo ID: {self.id} | Todo description: {self.description} | Todo_complete_status: {self.completed}]\n'
+
+
+class Todolist(db.Model):
+    __tablename__ = 'lists'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    todos = db.relationship('Todos', backref='list', lazy=True)
+
+    def __repr__(self):
+        return f'[list id = {self.id} | list name = {self.name}]\n'
+
 
 
 # define delete todo endpoint
@@ -113,10 +126,16 @@ def add_todo():
             return jsonify(body)
 
 
+# define todolist route
+@app.route('/lists/<list_id>')
+def get_todolist(list_id):
+    return render_template('index.html', todos=Todos.query.filter_by(list_id=list_id).order_by('id').all())
+
+
 # define homepage route
 @app.route('/')
 def index():
-    return render_template('index.html', todos=Todos.query.order_by('id').all())
+    return redirect(url_for('get_todolist', list_id=1))
 
 
 if __name__ == '__main__':
