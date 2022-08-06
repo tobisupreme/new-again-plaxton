@@ -91,6 +91,7 @@ function updateTodoStatus(e) {
 deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
 
 function deleteTodo(e) {
+    const li = e.target.parentElement;
     const todo_id = e.target.parentElement.firstElementChild.dataset.id;
 
     // Define fetch parameters
@@ -107,7 +108,8 @@ function deleteTodo(e) {
     fetch(url, request)
         .then((response) => {
             if (response.status == 200) {
-                window.location.reload();
+                li.remove();
+                // window.location.reload();
             } else throw Error;
         })
         .catch((err) => {
