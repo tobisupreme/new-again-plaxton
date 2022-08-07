@@ -129,7 +129,7 @@ def add_todo():
 # define todolist route
 @app.route('/lists/<list_id>')
 def get_todolist(list_id):
-    return render_template('index.html', todos=Todos.query.filter_by(list_id=list_id).order_by('id').all())
+    return render_template('index.html', lists=Todolist.query.all(), todos=Todos.query.filter_by(list_id=list_id).order_by('id').all())
 
 
 # define homepage route

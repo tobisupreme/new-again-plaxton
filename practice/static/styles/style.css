@@ -36,17 +36,27 @@ h2 {
 .todos-wrap {
     align-items: center;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, minmax(3.2rem, auto));
     min-width: 32rem;
     max-width: 52rem;
+    column-gap: 1.6rem;
 }
 
 .todos-wrap h2 {
     margin-bottom: 3.2rem;
+    grid-column: 1 / -1;
+}
+
+.collection-wrap {
+    margin-bottom: 4rem;
+    grid-row: 2 / -1;
+    align-self: flex-start;
 }
 
 #form-wrap,
-.lists-wrap {
+.lists-wrap,
+.collection-wrap {
     position: relative;
     border: var(--quick-border);
     border-radius: .6rem;
@@ -77,11 +87,13 @@ h2 {
     text-align: center;
 }
 
-.lists-wrap {
+.lists-wrap,
+.collection-wrap {
     padding: .8rem 1.6rem;
 }
 
-.lists-wrap li {
+.lists-wrap li,
+.collection-wrap li {
     margin-bottom: .8rem;
     display: grid;
     grid-template-columns: 7% 80% 13%;
@@ -91,16 +103,19 @@ h2 {
     font-size: 1.7rem;
 }
 
-.lists-wrap li .delete {
+.lists-wrap li .delete,
+.collection-wrap li .delete {
     cursor: pointer;
     transition: var(--snappy-transition);
 }
 
-.lists-wrap li .delete:hover {
+.lists-wrap li .delete:hover,
+.collection-wrap li .delete:hover {
     color: var(--primary-alert);
 }
 
-.lists-wrap li:last-of-type {
+.lists-wrap li:last-of-type,
+.collection-wrap li:last-of-type {
     margin-bottom: 0;
 }
 

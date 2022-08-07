@@ -3,7 +3,7 @@ const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
 const errorMessage = document.getElementById("error");
 const checkboxes = document.querySelectorAll(".checkbox");
-const deleteButtons = document.querySelectorAll(".delete");
+const deleteButtons = document.querySelectorAll(".delete.todos");
 
 // addEventListener on form submission
 form.addEventListener("submit", sendRequest);
@@ -95,6 +95,7 @@ deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
 function deleteTodo(e) {
     const li = e.target.parentElement;
     const todo_id = e.target.parentElement.firstElementChild.dataset.id;
+    console.log("working soifsidjf");
 
     // Define fetch parameters
     const url = `/todo/${todo_id}/delete`;
