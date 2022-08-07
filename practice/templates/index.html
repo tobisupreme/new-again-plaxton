@@ -60,6 +60,11 @@
                     <form id="form">
 
                         <input type="text" name="todo" id="todo" placeholder="New to-do here...">
+                        <select name="todo-list" id="todo-list">
+                            {% for list in lists %}  
+                            <option value="{{ list.id}}">{{ list.name}}</option>
+                            {% endfor %}
+                        </select>
                         <input type="submit" value="Add" id="submit">
 
                     </form>

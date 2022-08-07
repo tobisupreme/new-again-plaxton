@@ -187,17 +187,22 @@ def add_todo():
     body = {}
     try:
         # get data from client request
-        add_todo = request.get_json()['description']
+        description = request.get_json()['description']
+        list_id = request.get_json()['list_id']
+
         # attach client request to database instance
-        todo = Todos(description=add_todo)
-        # add request to data base
+        todo = Todos(description=description, list_id=list_id)
+
+        # add request, then commit to database
         db.session.add(todo)
+        db.session.commit()
+
         # read from database and attach to a response object
         body['description'] = todo.description
+        body['id'] = todo.id
+        
         # for debugging, print to the console
         print(body)
-        # commit transaction to database
-        db.session.commit()
     except:
         # in case of error, rollback transaction
         error = True
@@ -205,10 +210,10 @@ def add_todo():
     finally:
         # close database session
         db.session.close()
-        if error:
-            abort()
-        else:
-            return jsonify(body)
+    if error:
+        abort(500)
+    else:
+        return jsonify(body)
 
 
 # define todolist route

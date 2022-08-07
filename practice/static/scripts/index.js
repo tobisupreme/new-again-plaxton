@@ -17,18 +17,24 @@ form.addEventListener("submit", createTodo);
 // create todolist when form is submitted
 listsForm.addEventListener("submit", createTodolist);
 
-deleteButtons.forEach((button) => {
-    let classList = button.classList
-    classList = Array.from(classList)
+// Add click events to delete buttons
+function addEventsToDeleteButtons() {
+    let deleteButtons = document.querySelectorAll(".delete");
 
-    if (classList.indexOf("list") == -1) {
-        // delete todo item when button is clicked
-        button.addEventListener("click", deleteTodo)
-    } else {
-        // delete todo list when button is clicked
-        button.addEventListener("click", deleteTodolist)
-    }
-})
+    deleteButtons.forEach((button) => {
+        let classList = button.classList;
+        classList = Array.from(classList);
+
+        if (classList.indexOf("list") == -1) {
+            // delete todo item when button is clicked
+            button.addEventListener("click", deleteTodo);
+        } else {
+            // delete todo list when button is clicked
+            button.addEventListener("click", deleteTodolist);
+        }
+    });
+}
+addEventsToDeleteButtons();
 
 // update todo completed status when checkbox is toggled
 todos.forEach((todo) => {
@@ -57,6 +63,7 @@ function createTodo(e) {
         method: "POST",
         body: JSON.stringify({
             description: todoDescription,
+            list_id: e.target[1].value,
         }),
         headers: { "Content-Type": "application/JSON" },
     };
@@ -65,6 +72,9 @@ function createTodo(e) {
     fetch(url, request)
         .then((data) => data.json())
         .then((data) => {
+            const todoDescription = data.description;
+            const todoId = data.id;
+
             // get ul
             const ul = document.querySelector(".lists-wrap");
 
@@ -72,18 +82,18 @@ function createTodo(e) {
             const li = document.createElement("li");
 
             // create todo description
-            const newTodo = document.createTextNode(data.description);
+            const newTodo = document.createTextNode(todoDescription);
 
-            // create <input type="checkbox" class="checkbox"/>
+            // create <input type="checkbox" data-id="todoId" class="checkbox"/>
             const checkbox = document.createElement("input");
             checkbox.setAttribute("type", "checkbox");
+            checkbox.setAttribute("data-id", todoId);
             checkbox.className = "checkbox";
 
             // create <div class="delete">&cross;</div>
             const div = document.createElement("div");
             div.innerHTML = "&cross;";
             div.className = "delete";
-            div.addEventListener("click", deleteTodo);
 
             // put it all in the <li></li>
             li.appendChild(checkbox);
@@ -93,6 +103,7 @@ function createTodo(e) {
             // Put it all in the ul
             ul.appendChild(li);
         })
+        .then(() => addEventsToDeleteButtons())
         .catch((err) => {
             // if error, show error message
             console.log(err);
@@ -117,6 +128,7 @@ function createTodolist(e) {
         method: "POST",
         body: JSON.stringify({
             name: listname,
+            list_id: "",
         }),
         headers: { "Content-Type": "application/JSON" },
     };
