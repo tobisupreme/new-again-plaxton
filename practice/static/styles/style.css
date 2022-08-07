@@ -3,7 +3,7 @@
 :root {
     --primary-bg: #ffffff;
     --primary-fg: #d7e04d;
-    --primary-alert: #ff0000;
+    --status-color: #ff0000;
     --quick-border: .1rem solid var(--primary-fg);
     --snappy-transition: .2s ease-in-out;
 }
@@ -124,7 +124,7 @@ h2 {
     grid-column: 2 / -1;
 }
 
-.error-wrap {
+.status-message-wrap {
     grid-column: 1 / -1;
     grid-row: 2 / 3;
 
@@ -161,12 +161,12 @@ h2 {
     width: 100%;
 }
 
-#error {
-    color: var(--primary-alert);
+#status-message {
+    color: var(--status-color);
     text-align: center;
 }
 
-.error-wrap {
+.status-message-wrap {
     height: 3.2rem;
     display: flex;
     justify-content: center;

@@ -1,7 +1,8 @@
 // Get DOM elements
+const root = document.querySelector(':root');
 const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
-const errorMessage = document.getElementById("error");
+const statusMessage = document.getElementById("status-message");
 const listsWrap = document.querySelector(".lists-wrap");
 const todos = listsWrap.querySelectorAll(".checkbox");
 const deleteButtons = document.querySelectorAll(".delete");
@@ -49,12 +50,12 @@ lists.forEach((list) => {
 // function to create todo when form is submitted
 function createTodo(e) {
     e.preventDefault();
-    errorMessage.className = "hidden";
+    statusMessage.className = "hidden";
 
     // show error if todo is empty
     const todoDescription = todo.value;
     if (todoDescription.length < 1) {
-        throw Error("Todo should not be empty!");
+        showError("Todo should not be empty!");
     }
 
     // Define fetch parameters
@@ -72,42 +73,50 @@ function createTodo(e) {
     fetch(url, request)
         .then((data) => data.json())
         .then((data) => {
-            const todoDescription = data.description;
-            const todoId = data.id;
+            const title = document.querySelector(".list-title").innerText.toLowerCase();
+            const listName = data.list_name.toLowerCase();
+            if (title == listName) {
+                const todoDescription = data.description;
+                const todoId = data.id;
 
-            // get ul
-            const ul = document.querySelector(".lists-wrap");
+                // get ul
+                const ul = document.querySelector(".lists-wrap");
 
-            // create <li></li>
-            const li = document.createElement("li");
+                // create <li></li>
+                const li = document.createElement("li");
 
-            // create todo description
-            const newTodo = document.createTextNode(todoDescription);
+                // create todo description
+                const newTodo = document.createTextNode(todoDescription);
 
-            // create <input type="checkbox" data-id="todoId" class="checkbox"/>
-            const checkbox = document.createElement("input");
-            checkbox.setAttribute("type", "checkbox");
-            checkbox.setAttribute("data-id", todoId);
-            checkbox.className = "checkbox";
+                // create <input type="checkbox" data-id="todoId" class="checkbox"/>
+                const checkbox = document.createElement("input");
+                checkbox.setAttribute("type", "checkbox");
+                checkbox.setAttribute("data-id", todoId);
+                checkbox.className = "checkbox";
 
-            // create <div class="delete">&cross;</div>
-            const div = document.createElement("div");
-            div.innerHTML = "&cross;";
-            div.className = "delete";
+                // create <div class="delete">&cross;</div>
+                const div = document.createElement("div");
+                div.innerHTML = "&cross;";
+                div.className = "delete";
 
-            // put it all in the <li></li>
-            li.appendChild(checkbox);
-            li.appendChild(newTodo);
-            li.appendChild(div);
+                // put it all in the <li></li>
+                li.appendChild(checkbox);
+                li.appendChild(newTodo);
+                li.appendChild(div);
 
-            // Put it all in the ul
-            ul.appendChild(li);
+                // Put it all in the ul
+                ul.appendChild(li);
+            }
+
+            showSuccess("List successfully added!")
         })
-        .then(() => addEventsToDeleteButtons())
+        .then(()=> {
+            addEventsToDeleteButtons();
+        })
         .catch((err) => {
             // if error, show error message
-            console.log(err);
-            errorMessage.className = "";
+            console.table(err);
+            showError("Oops! An error occured!")
         });
 }
 
@@ -275,4 +284,19 @@ function deleteTodolist(e) {
             console.log(err);
             errorMessage.className = "";
         });
+}
+
+// function to show error message
+function showError(msg = 'Oops! An error occured!') {
+    root.style.setProperty('--status-color', 'red')
+    statusMessage.innerText = msg;
+    statusMessage.classList.remove("hidden");
+    throw Error(msg);
+}
+
+// function to show success message
+function showSuccess(msg) {
+    root.style.setProperty('--status-color', 'green')
+    statusMessage.innerText = msg;
+    statusMessage.classList.remove("hidden");
 }

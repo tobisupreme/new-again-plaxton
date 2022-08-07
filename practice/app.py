@@ -200,7 +200,8 @@ def add_todo():
         # read from database and attach to a response object
         body['description'] = todo.description
         body['id'] = todo.id
-        
+        body['list_name'] = Todolist.query.get(list_id).name
+
         # for debugging, print to the console
         print(body)
     except:
