@@ -65,6 +65,35 @@ def delete_todo(todo_id):
 
 
 # define update todo completed status endpoint
+# @app.route('/lists/<list_id>/update', methods=['POST'])
+# def set_todolist_complete(list_id):
+#     error = False
+#     try:
+#         # get data from client request
+#         list_id = list_id
+#         list_status = request.get_json()['status']
+#         # attach client request to database instance
+#         todolist = Todolist.query.filter_by(list_id=list_id)
+#         # # add request to data base
+#         # todo.completed = todo_status
+#         db.session.add(todo)
+#         # for debugging, print to the console
+#         print(todo)
+#         # commit transaction to database
+#         db.session.commit()
+#     except:
+#         # in case of error, rollback transaction
+#         error = True
+#         db.session.rollback()
+#     finally:
+#         # close database session
+#         db.session.close()
+#         if error:
+#             abort(500)
+#     return redirect(url_for('index'))
+
+
+# define update todo completed status endpoint
 @app.route('/todo/<todo_id>/update', methods=['POST'])
 def set_todo_complete(todo_id):
     error = False
@@ -91,6 +120,40 @@ def set_todo_complete(todo_id):
         if error:
             abort(500)
     return redirect(url_for('index'))
+
+
+# define create todolist endpoint
+@app.route('/lists/add', methods=['POST'])
+def add_todolist():
+    error = False
+    body = {}
+    try:
+        # get data from client request
+        add_todolist = request.get_json()['name']
+        # attach client request to database instance
+        todolist = Todolist(name=add_todolist)
+        # add request to data base
+        db.session.add(todolist)
+        # read from database and attach to a response object
+        todolist_id = Todolist.query.filter_by(name=add_todolist).all()
+        body['listname'] = todolist.name
+        print(todolist_id)
+        body['list_id'] = todolist_id[0].id
+        # for debugging, print to the console
+        print(body)
+        # commit transaction to database
+        db.session.commit()
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+        if error:
+            abort()
+        else:
+            return jsonify(body)
 
 
 # define create todo endpoint
