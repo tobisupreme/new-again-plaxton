@@ -14,34 +14,76 @@
 <body>
     <div class="container">
         <div class="todos-wrap">
-            <h2>Todiddly</h2>
+            <div class="title-wrap">
+                <h2>Todiddly</h2>
 
-            <fieldset id="form-wrap">
-
-                <h3 class="form-title">Add Todo</h3>
-                <form id="form">
-
-                    <input type="text" name="todo" id="todo" placeholder="To-do here...">
-                    <input type="submit" value="Add" id="submit">
-
-                </form>
-
-            </fieldset>
-
-            <div class="error-wrap">
-                <p class="hidden" id="error">Oops! An error occured.</p>
+                <div class="subtitle">
+                    <h3 class="list">
+                        TODO LISTS
+                    </h3>
+                    <h3 class="items">
+                        TODO ITEMS
+                    </h3>
+                </div>
             </div>
 
-            <ul class="lists-wrap">
-                {% for todo in todos %}
-                
-                <li>
-                    <input data-id={{todo.id}} type="checkbox" class="checkbox" {% if todo.completed %} checked {% endif %}>
-                    {{ todo.description }}
-                    <div class="delete">&cross;</div>
-                </li>
-                {% endfor %}
-            </ul>
+            <div class="body-wrap">
+
+                <fieldset id="list-form-wrap">
+
+                    <h3 class="list form-title">Add List</h3>
+                    <form id="list-form">
+
+                        <input type="text" name="todolist" id="todolist" placeholder="New list here...">
+                        <input type="submit" value="Add" id="list-submit">
+
+                    </form>
+
+                </fieldset>
+
+                <ul class="collection-wrap">
+
+                    {% for list in lists %}
+                    <li>
+                        <input data-id={{list.id}} type="checkbox" class="checkbox">
+                        <a href="/lists/{{ list.id }}">{{ list.name }}</a>
+
+                        <div class="list delete">&cross;</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <fieldset id="form-wrap">
+
+                    <h3 class="form-title">Add Todo</h3>
+                    <form id="form">
+
+                        <input type="text" name="todo" id="todo" placeholder="New to-do here...">
+                        <input type="submit" value="Add" id="submit">
+
+                    </form>
+
+                </fieldset>
+
+                <div class="error-wrap">
+                    <p class="hidden" id="error">Oops! An error occured.</p>
+                </div>
+
+                <ul class="lists-wrap">
+                    <h4 class="list-title">{{ active_list.name }}</h4>
+
+                    {% for todo in todos %}
+
+                    <li>
+                        <input data-id={{todo.id}} type="checkbox" class="checkbox" {% if todo.completed %} checked {%
+                            endif %}>
+                        {{ todo.description }}
+                        <div class="todos delete">&cross;</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
         </div>
     </div>
 </body>

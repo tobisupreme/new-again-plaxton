@@ -5,10 +5,17 @@ const errorMessage = document.getElementById("error");
 const checkboxes = document.querySelectorAll(".checkbox");
 const deleteButtons = document.querySelectorAll(".delete");
 
-// addEventListener on form submission
-form.addEventListener("submit", sendRequest);
+// create todo when form is submitted
+form.addEventListener("submit", createTodo);
 
-function sendRequest(e) {
+// delete todo item when button is clicked
+deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
+
+// update todo completed status when checkbox is toggled
+checkboxes.forEach((checkbox) => checkbox.addEventListener("change", updateTodoStatus));
+
+// function to create todo when form is submitted
+function createTodo(e) {
     e.preventDefault();
     errorMessage.className = "hidden";
 
@@ -67,9 +74,7 @@ function sendRequest(e) {
         });
 }
 
-// Add event lisetener to checkboxes
-checkboxes.forEach((checkbox) => checkbox.addEventListener("change", updateTodoStatus));
-
+// function to update todo completed status when checkbox is toggled
 function updateTodoStatus(e) {
     const todo_id = e.target.dataset.id;
     const completed_status = e.target.checked;
@@ -89,9 +94,7 @@ function updateTodoStatus(e) {
         .then((response) => console.log(response.status));
 }
 
-// Add event listener to delete buttons
-deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
-
+// function to delete todo item when button is clicked
 function deleteTodo(e) {
     const li = e.target.parentElement;
     const todo_id = e.target.parentElement.firstElementChild.dataset.id;
