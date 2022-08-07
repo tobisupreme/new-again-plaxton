@@ -25,6 +25,7 @@
                         TODO ITEMS
                     </h3>
                 </div>
+
             </div>
 
             <div class="body-wrap">
@@ -70,10 +71,9 @@
                 </div>
 
                 <ul class="lists-wrap">
+
                     <h4 class="list-title">{{ active_list.name }}</h4>
-
                     {% for todo in todos %}
-
                     <li>
                         <input data-id={{todo.id}} type="checkbox" class="checkbox" {% if todo.completed %} checked {%
                             endif %}>
@@ -81,7 +81,9 @@
                         <div class="todos delete">&cross;</div>
                     </li>
                     {% endfor %}
+
                 </ul>
+                
             </div>
 
         </div>
