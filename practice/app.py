@@ -1,4 +1,3 @@
-from email.policy import default
 from os import abort
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
