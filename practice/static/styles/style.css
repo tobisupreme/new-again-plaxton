@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+
 :root {
     --primary-bg: #ffffff;
     --primary-fg: #d7e04d;
@@ -19,11 +21,52 @@ html {
 body {
     font-size: 1.6rem;
     background-color: var(--primary-bg);
+    font-family: 'Lato', sans-serif;
 }
 
 h2 {
-    font-size: 2.4rem;
+    font-size: 4rem;
     font-weight: 600;
+}
+
+.title-wrap h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.title-wrap h3,
+.list-title,
+h2 {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.title-wrap h3,
+.list-title {
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.subtitle {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1.6rem;
+    letter-spacing: .17rem;
+}
+
+.list, .items {
+    flex-basis: 50%;
+    justify-self: flex-end;
+}
+
+.list-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.6rem;
+    padding-left: .8rem;
+    /* text-align: center; */
+    /* text-decoration: underline; */
+    letter-spacing: .17rem;
+    grid-column: 2 / -1;
 }
 
 .container {
@@ -37,23 +80,30 @@ h2 {
     align-items: center;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, minmax(3.2rem, auto));
-    min-width: 32rem;
-    max-width: 52rem;
+    /* grid-template-rows: minmax(3.2rem, auto); */
+    /* min-width: 32rem;*/
+    max-width: 70.4rem; 
     column-gap: 1.6rem;
 }
 
-.todos-wrap h2 {
-    margin-bottom: 3.2rem;
+.todos-wrap .title-wrap {
+    margin-bottom: 1.6rem;
     grid-column: 1 / -1;
 }
 
+.body-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1 / -1;
+    column-gap: 1.6rem;
+}
+
 .collection-wrap {
-    margin-bottom: 4rem;
-    grid-row: 2 / -1;
+    grid-row: span 99;
     align-self: flex-start;
 }
 
+#list-form-wrap,
 #form-wrap,
 .lists-wrap,
 .collection-wrap {
@@ -62,7 +112,32 @@ h2 {
     border-radius: .6rem;
 }
 
-.form-title {
+.collection-wrap a {
+    text-decoration: none;
+    font-variant: small-caps;
+    display: block;
+    font-size: 1.8rem;
+}
+
+.lists-wrap, 
+#form-wrap {
+    grid-column: 2 / -1;
+}
+.error-wrap {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+
+}
+#form-wrap {
+    grid-row: 1 / 2;
+}
+
+#list-form-wrap,
+.collection-wrap {
+    grid-column: 1 / 2;
+}
+
+.form-title, list.form-title {
     position: absolute;
     transform: translate(12.5%, -50%);
     z-index: 20;
@@ -70,7 +145,7 @@ h2 {
     background-color: var(--primary-bg);
 }
 
-#form {
+#list-form, #form {
     padding: 2.4rem;
     padding-bottom: .8rem;
     display: flex;
@@ -86,10 +161,18 @@ h2 {
     color: var(--primary-alert);
     text-align: center;
 }
+.error-wrap {
+    height: 3.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .lists-wrap,
+.subtitle>.list,
+.subtitle>.items,
 .collection-wrap {
-    padding: .8rem 1.6rem;
+    padding: .8rem 1.6rem 0;
 }
 
 .lists-wrap li,
@@ -116,29 +199,29 @@ h2 {
 
 .lists-wrap li:last-of-type,
 .collection-wrap li:last-of-type {
-    margin-bottom: 0;
+    margin-bottom: 1.6rem;
 }
 
 .hidden {
     display: none;
 }
 
-#todo,
-#submit {
+#todo, #todolist,
+#submit, #list-submit {
     border: none;
     outline: none;
     appearance: none;
     border-radius: .4rem;
 }
 
-#todo {
+#todo, #todolist {
     padding: .8rem 1.2rem;
     outline: var(--quick-border);
     line-height: 1.4;
     font-size: 1.5rem;
 }
 
-form #submit {
+form #submit, form #list-submit {
     appearance: none;
     padding: .8rem 1.6rem;
     width: min-content;
