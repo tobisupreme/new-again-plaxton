@@ -17,17 +17,27 @@ form.addEventListener("submit", createTodo);
 // create todolist when form is submitted
 listsForm.addEventListener("submit", createTodolist);
 
-// delete todo item when button is clicked
-deleteButtons.forEach((button) => button.addEventListener("click", deleteTodo));
+deleteButtons.forEach((button) => {
+    let classList = button.classList
+    classList = Array.from(classList)
+
+    if (classList.indexOf("list") == -1) {
+        // delete todo item when button is clicked
+        button.addEventListener("click", deleteTodo)
+    } else {
+        // delete todo list when button is clicked
+        button.addEventListener("click", deleteTodolist)
+    }
+})
 
 // update todo completed status when checkbox is toggled
 todos.forEach((todo) => {
-    todo.addEventListener("change", updateTodoStatus)
+    todo.addEventListener("change", updateTodoStatus);
 });
 
 // update todos in list when checkbox is toggled
 lists.forEach((list) => {
-    list.addEventListener("change", updateTodosStatusViaList)
+    list.addEventListener("change", updateTodosStatusViaList);
 });
 
 // function to create todo when form is submitted
@@ -167,8 +177,7 @@ function updateTodoStatus(e) {
     };
 
     // Send request to server endpoint using fetch
-    fetch(url, request)
-        .then((response) => console.log(response.status));
+    fetch(url, request).then((response) => console.log(response.status));
 }
 
 // function to update todos completed status when list checkbox is toggled
@@ -213,10 +222,40 @@ function deleteTodo(e) {
 
     // Send request to server endpoint using fetch
     fetch(url, request)
+        .then((response) => response.json())
         .then((response) => {
-            if (response.status == 405) {
+            if (response.success == true) {
                 li.remove();
-                // window.location.reload();
+            } else throw Error;
+        })
+        .catch((err) => {
+            // if error, show error message
+            console.log(err);
+            errorMessage.className = "";
+        });
+}
+
+// function to delete todo list when button is clicked
+function deleteTodolist(e) {
+    const li = e.target.parentElement;
+    const list_id = li.firstElementChild.dataset.id;
+
+    // Define fetch parameters
+    const url = `/lists/${list_id}/delete`;
+    const request = {
+        method: "DELETE",
+        body: JSON.stringify({
+            list_id: list_id,
+        }),
+        headers: { "Content-Type": "application/json" },
+    };
+
+    // Send request to server endpoint using fetch
+    fetch(url, request)
+        .then((response) => response.json())
+        .then((response) => {
+            if (response.success == true) {
+                li.remove();
             } else throw Error;
         })
         .catch((err) => {

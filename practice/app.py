@@ -58,10 +58,34 @@ def delete_todo(todo_id):
     finally:
         # close database session
         db.session.close()
-        if error:
-            abort(500)
-        else:
-            return redirect(url_for('index'))
+    if error:
+        abort(500)
+    else:
+        return jsonify({'success': True})
+
+
+# define delete todolist endpoint
+@app.route('/lists/<list_id>/delete', methods=['DELETE'])
+def delete_todolist(list_id):
+    error = False
+    try:
+        # get database instance
+        todolist = Todolist.query.get(list_id)
+        # delete todo from data base
+        db.session.delete(todolist)
+        # commit transaction to database
+        db.session.commit()
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+    if error:
+        abort(500)
+    else:
+        return jsonify({'success': True})
 
 
 # define update todo completed status endpoint
