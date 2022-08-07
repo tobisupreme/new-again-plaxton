@@ -89,32 +89,39 @@ def delete_todolist(list_id):
 
 
 # define update todo completed status endpoint
-# @app.route('/lists/<list_id>/update', methods=['POST'])
-# def set_todolist_complete(list_id):
-#     error = False
-#     try:
-#         # get data from client request
-#         list_id = list_id
-#         list_status = request.get_json()['status']
-#         # attach client request to database instance
-#         todolist = Todolist.query.filter_by(list_id=list_id)
-#         # # add request to data base
-#         # todo.completed = todo_status
-#         db.session.add(todo)
-#         # for debugging, print to the console
-#         print(todo)
-#         # commit transaction to database
-#         db.session.commit()
-#     except:
-#         # in case of error, rollback transaction
-#         error = True
-#         db.session.rollback()
-#     finally:
-#         # close database session
-#         db.session.close()
-#         if error:
-#             abort(500)
-#     return redirect(url_for('index'))
+@app.route('/lists/<list_id>/update', methods=['POST'])
+def set_todolist_complete(list_id):
+    error = False
+    body = {}
+    try:
+        # get data from client request
+        list_status = request.get_json()['status']
+        
+        # attach client request to database instance
+        todolist = Todolist.query.get(list_id)
+       
+        # add request to data base
+        for todo in todolist.todos:
+            todo.completed = list_status
+ 
+        # commit transaction to database
+        db.session.commit()
+
+        # send response to client
+        body['list_id'] = todolist.id
+        body['list_name'] = todolist.name
+        body['list_status'] = list_status
+    except:
+        # in case of error, rollback transaction
+        error = True
+        db.session.rollback()
+    finally:
+        # close database session
+        db.session.close()
+    if error:
+        abort(500)
+    else:
+        return jsonify(body)
 
 
 # define update todo completed status endpoint
@@ -141,8 +148,8 @@ def set_todo_complete(todo_id):
     finally:
         # close database session
         db.session.close()
-        if error:
-            abort(500)
+    if error:
+        abort(500)
     return redirect(url_for('index'))
 
 
@@ -158,15 +165,13 @@ def add_todolist():
         todolist = Todolist(name=add_todolist)
         # add request to data base
         db.session.add(todolist)
-        # read from database and attach to a response object
-        todolist_id = Todolist.query.filter_by(name=add_todolist).all()
-        body['listname'] = todolist.name
-        print(todolist_id)
-        body['list_id'] = todolist_id[0].id
-        # for debugging, print to the console
-        print(body)
         # commit transaction to database
         db.session.commit()
+        # read from database and attach to a response object
+        body['listname'] = todolist.name
+        body['list_id'] = todolist.id
+        # for debugging, print to the console
+        print(body)
     except:
         # in case of error, rollback transaction
         error = True
@@ -174,10 +179,10 @@ def add_todolist():
     finally:
         # close database session
         db.session.close()
-        if error:
-            abort()
-        else:
-            return jsonify(body)
+    if error:
+        abort()
+    else:
+        return jsonify(body)
 
 
 # define create todo endpoint

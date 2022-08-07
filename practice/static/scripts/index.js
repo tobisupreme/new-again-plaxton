@@ -1,16 +1,12 @@
 // Get DOM elements
-const root = document.querySelector(':root');
+const root = document.querySelector(":root");
 const form = document.querySelector("#form");
 const todo = document.querySelector("#todo");
 const statusMessage = document.getElementById("status-message");
-const listsWrap = document.querySelector(".lists-wrap");
-const todos = listsWrap.querySelectorAll(".checkbox");
 const deleteButtons = document.querySelectorAll(".delete");
 
 const listsForm = document.querySelector("#list-form");
 const todolist = document.querySelector("#todolist");
-const collectionWrap = document.querySelector(".collection-wrap");
-const lists = collectionWrap.querySelectorAll(".checkbox");
 
 // create todo when form is submitted
 form.addEventListener("submit", createTodo);
@@ -37,15 +33,21 @@ function addEventsToDeleteButtons() {
 }
 addEventsToDeleteButtons();
 
-// update todo completed status when checkbox is toggled
-todos.forEach((todo) => {
-    todo.addEventListener("change", updateTodoStatus);
-});
-
-// update todos in list when checkbox is toggled
-lists.forEach((list) => {
-    list.addEventListener("change", updateTodosStatusViaList);
-});
+// Add change events to checkboxes
+function addEventsToCheckboxes() {
+    const boxes = document.querySelectorAll(".checkbox");
+    boxes.forEach((box) => {
+        const parentClass = box.parentElement.parentElement.className;
+        if (parentClass == "collection-wrap") {
+            // update todos in list when checkbox is toggled
+            box.addEventListener("change", updateTodosStatusViaList);
+        } else if (parentClass == "lists-wrap") {
+            // update todo completed status when checkbox is toggled
+            box.addEventListener("change", updateTodoStatus);
+        }
+    });
+}
+addEventsToCheckboxes();
 
 // function to create todo when form is submitted
 function createTodo(e) {
@@ -108,27 +110,28 @@ function createTodo(e) {
                 ul.appendChild(li);
             }
 
-            showSuccess("List successfully added!")
+            showSuccess("List successfully added!");
         })
-        .then(()=> {
+        .then(() => {
+            addEventsToCheckboxes();
             addEventsToDeleteButtons();
         })
         .catch((err) => {
             // if error, show error message
             console.table(err);
-            showError("Oops! An error occured!")
+            showError("Oops! An error occured!");
         });
 }
 
 // function to create todolist when form is submitted
 function createTodolist(e) {
     e.preventDefault();
-    errorMessage.className = "hidden";
+    statusMessage.className = "hidden";
 
     // show error if todolist is empty
     const listname = todolist.value;
     if (listname.length < 1) {
-        throw Error("Todo should not be empty!");
+        showError("List title should not be empty!");
     }
 
     // Define fetch parameters
@@ -137,7 +140,6 @@ function createTodolist(e) {
         method: "POST",
         body: JSON.stringify({
             name: listname,
-            list_id: "",
         }),
         headers: { "Content-Type": "application/JSON" },
     };
@@ -157,6 +159,7 @@ function createTodolist(e) {
 
             // create <input type="checkbox" class="checkbox"/>
             const checkbox = document.createElement("input");
+            checkbox.setAttribute("data-id", data.list_id);
             checkbox.setAttribute("type", "checkbox");
             checkbox.className = "checkbox";
 
@@ -165,7 +168,6 @@ function createTodolist(e) {
             div.innerHTML = "&cross;";
             div.className = "delete";
             div.classList.add("list");
-            div.addEventListener("click", deleteTodo);
 
             // put it all in the <li></li>
             li.appendChild(checkbox);
@@ -173,12 +175,19 @@ function createTodolist(e) {
             li.appendChild(div);
 
             // Put it all in the ul
+            const collectionWrap = document.querySelector(".collection-wrap");
             collectionWrap.appendChild(li);
+
+            updateTodolistDropdown(data.list_id, data.listname, "add");
+        })
+        .then(() => {
+            addEventsToCheckboxes();
+            addEventsToDeleteButtons();
         })
         .catch((err) => {
             // if error, show error message
-            console.log(err);
-            errorMessage.className = "";
+            console.table(err);
+            showError("Oops! An error occured!");
         });
 }
 
@@ -217,13 +226,19 @@ function updateTodosStatusViaList(e) {
     };
 
     // Send request to server endpoint using fetch
-    // fetch(url, request)
-    //     .then((response) => console.log(response.status))
-    //     .catch((err) => {
-    //         // if error, show error message
-    //         console.log(err);
-    //         errorMessage.className = "";
-    //     });
+    fetch(url, request)
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        // .then((response) => {
+        //     if (response.status == 200) {
+
+        //     }
+        // })
+        .catch((err) => {
+            // if error, show error message
+            console.table(err);
+            showError("Oops! An error occured!");
+        });
 }
 
 // function to delete todo item when button is clicked
@@ -251,8 +266,8 @@ function deleteTodo(e) {
         })
         .catch((err) => {
             // if error, show error message
-            console.log(err);
-            errorMessage.className = "";
+            console.table(err);
+            showError("Oops! An error occured!");
         });
 }
 
@@ -277,18 +292,19 @@ function deleteTodolist(e) {
         .then((response) => {
             if (response.success == true) {
                 li.remove();
+                updateTodolistDropdown(list_id, "", "remove");
             } else throw Error;
         })
         .catch((err) => {
             // if error, show error message
-            console.log(err);
-            errorMessage.className = "";
+            console.table(err);
+            showError("Oops! An error occured!");
         });
 }
 
 // function to show error message
-function showError(msg = 'Oops! An error occured!') {
-    root.style.setProperty('--status-color', 'red')
+function showError(msg = "Oops! An error occured!") {
+    root.style.setProperty("--status-color", "red");
     statusMessage.innerText = msg;
     statusMessage.classList.remove("hidden");
     throw Error(msg);
@@ -296,7 +312,43 @@ function showError(msg = 'Oops! An error occured!') {
 
 // function to show success message
 function showSuccess(msg) {
-    root.style.setProperty('--status-color', 'green')
+    root.style.setProperty("--status-color", "green");
     statusMessage.innerText = msg;
     statusMessage.classList.remove("hidden");
 }
+
+// show correct default option on list load
+function selectDefaultList() {
+    const select = document.querySelectorAll("option");
+    const url = window.location.href;
+    const matchingRegex = /[.+\/lists/]\d+$/;
+    currentListId = url.match(matchingRegex)[0].slice(1);
+
+    select.forEach((option) => {
+        if (option.value == currentListId) {
+            option.setAttribute("selected", "selected");
+        }
+    });
+}
+selectDefaultList();
+
+// update todolist dropdown on change
+function updateTodolistDropdown(id, name, action) {
+    if (action === "add") {
+        // <option value="23">Tambo</option>
+        const option = document.createElement("option");
+        const listName = document.createTextNode(name);
+        option.setAttribute("value", id);
+        option.appendChild(listName);
+        const select = document.querySelector("select");
+        select.appendChild(option);
+    } else if (action === "remove") {
+        const options = document.querySelectorAll("option");
+        options.forEach((option) => {
+            if (option.value == id) {
+                option.remove();
+            }
+        });
+    }
+}
+updateTodolistDropdown();
