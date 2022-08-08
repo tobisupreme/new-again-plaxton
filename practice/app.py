@@ -71,7 +71,9 @@ def delete_todolist(list_id):
     try:
         # get database instance
         todolist = Todolist.query.get(list_id)
-        # delete todo from data base
+        # delete todos and todolist from data base
+        for todo in todolist.todos:
+            db.session.delete(todo)
         db.session.delete(todolist)
         # commit transaction to database
         db.session.commit()
